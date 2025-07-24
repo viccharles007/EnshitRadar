@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EnshitRadar - Options</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f8f9fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      min-height: 100vh;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 300;
+    }
+    
+    .header p {
+      margin: 10px 0 0 0;
+      opacity: 0.9;
+      font-size: 16px;
+    }
+    
+    .content {
+      padding: 40px;
+    }
+    
+    .section {
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .section:last-child {
+      border-bottom: none;
+    }
+    
+    .section-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #495057;
+    }
+    
+    .setting-group {
+      margin-bottom: 25px;
+    }
+    
+    .setting-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px 0;
+      border-bottom: 1px solid #f1f3f4;
+    }
+    
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+    
+    .setting-info {
+      flex: 1;
+    }
+    
+    .setting-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 5px;
+    }
+    
+    .setting-description {
+      font-size: 14px;
+      color: #6c757d;
+      margin: 0;
+    }
+    
+    .setting-control {
+      margin-left: 20px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .slider {
+      background-color: #667eea;
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    
+    .select-control {
+      padding: 8px 12px;
+      border: 1px solid #ced4da;
+      border-radius: 6px;
+      background: white;
+      font-size: 14px;
+      min-width: 120px;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #5a6fd8;
+    }
+    
+    .btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+    
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+    
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    
+    .status-message {
+      padding: 12px 16px;
+      border-radius: 6px;
+      margin: 20px 0;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .status-success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .status-error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    
+    .stat-card {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🔍 EnshitRadar Options</h1>
+      <p>Configure your extension settings</p>
+    </header>
+    
+    <main class="content">
+      <div id="status-message" class="status-message"></div>
+      
+      <!-- General Settings -->
+      <section class="section">
+        <h2 class="section-title">General Settings</h2>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">Enable Extension</div>
+            <p class="setting-description">Turn the extension on or off globally</p>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="enabled-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">Theme</div>
+            <p class="setting-description">Choose your preferred theme</p>
+          </div>
+          <div class="setting-control">
+            <select id="theme-select" class="select-control">
+              <option value="auto">Auto (System)</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">Notifications</div>
+            <p class="setting-description">Receive notifications about extension activity</p>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="notifications-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Statistics -->
+      <section class="section">
+        <h2 class="section-title">Statistics</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="pages-processed">0</div>
+            <div class="stat-label">Pages Processed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="features-detected">0</div>
+            <div class="stat-label">Features Detected</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="time-saved">0m</div>
+            <div class="stat-label">Time Saved</div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Advanced Settings -->
+      <section class="section">
+        <h2 class="section-title">Advanced</h2>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-label">Debug Mode</div>
+            <p class="setting-description">Enable detailed logging for troubleshooting</p>
+          </div>
+          <div class="setting-control">
+            <label class="toggle-switch">
+              <input type="checkbox" id="debug-toggle">
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Actions -->
+      <section class="section">
+        <h2 class="section-title">Actions</h2>
+        
+        <div class="button-group">
+          <button id="save-button" class="btn btn-primary">Save Settings</button>
+          <button id="reset-button" class="btn btn-secondary">Reset to Defaults</button>
+          <button id="export-button" class="btn btn-secondary">Export Settings</button>
+          <button id="clear-data-button" class="btn btn-danger">Clear All Data</button>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html> 

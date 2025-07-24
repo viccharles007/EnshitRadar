@@ -1,0 +1,49 @@
+{
+  "name": "enshit-radar",
+  "version": "1.0.0",
+  "description": "A TypeScript Chrome Extension Template",
+  "scripts": {
+    "build": "webpack --mode=production",
+    "build:dev": "webpack --mode=development",
+    "dev": "webpack --mode=development --watch",
+    "clean": "rimraf dist",
+    "lint": "eslint src --ext .ts,.tsx",
+    "lint:fix": "eslint src --ext .ts,.tsx --fix",
+    "format": "prettier --write src/**/*.{ts,tsx,css,html}",
+    "format:check": "prettier --check src/**/*.{ts,tsx,css,html}",
+    "type-check": "tsc --noEmit",
+    "zip": "cd dist && zip -r ../extension.zip .",
+    "package": "pnpm run build && pnpm run zip",
+    "debug": "pnpm run build && echo \"Extension built. Loading instructions:\" && echo \"1. Open Chrome and go to chrome://extensions/\" && echo \"2. Enable 'Developer mode' (top right toggle)\" && echo \"3. Click 'Load unpacked' and select the 'dist' folder\" && echo \"4. The extension should now be loaded and ready for debugging\"",
+    "setup": "pnpm install && pnpm run build",
+    "check": "pnpm run type-check && pnpm run lint && pnpm run format:check",
+    "fix": "pnpm run lint:fix && pnpm run format",
+    "prebuild": "pnpm run clean",
+    "prepackage": "pnpm run check",
+    "start": "pnpm run dev",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
+    "eslint": "^8.54.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "html-webpack-plugin": "^5.5.4",
+    "mini-css-extract-plugin": "^2.7.6",
+    "prettier": "^3.1.0",
+    "rimraf": "^5.0.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.3.2",
+    "webpack": "^5.89.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "zustand": "^4.4.7"
+  },
+  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
+}
