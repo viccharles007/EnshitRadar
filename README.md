@@ -25,6 +25,7 @@ A Chrome extension that detects YouTube channels compromised by private equity o
 
 1. **Download**:
    - Go to [Releases](https://github.com/justmadlime/EnshitRadar/releases) → Download latest `.zip` file
+   - Extract the zip to the folder
 
 2. **Install in Chrome**:
    - Open Chrome → `chrome://extensions/`
