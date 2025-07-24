@@ -9,33 +9,9 @@
   },
   "channels": [
     {
-      "channelId": "UCblfuW_4rakIf2h6aqANefA",
-      "channelName": "Kurzgesagt – In a Nutshell",
-      "level": "low",
-      "description": "While still producing quality content, some recent videos show increased corporate influence and simplified messaging.",
-      "dateAdded": "2024-01-15",
-      "source": "Community reports"
-    },
-    {
       "channelId": "UCsBjURrPoezykLs9EqgamOA",
       "channelName": "Fireship",
       "level": "confirmed",
-      "description": "Channel has been compromised by corporate interests. Content now focuses heavily on sponsored products and misleading hype rather than educational material.",
-      "dateAdded": "2025-01-19",
-      "source": "User report"
-    },
-    {
-      "channelId": "custom_Fireship",
-      "channelName": "Fireship",
-      "level": "confirmed",
-      "description": "Channel has been compromised by corporate interests. Content now focuses heavily on sponsored products and misleading hype rather than educational material.",
-      "dateAdded": "2025-01-19",
-      "source": "User report"
-    },
-    {
-      "channelId": "custom_fireship",
-      "channelName": "Fireship",
-      "level": "confirmed", 
       "description": "Channel has been compromised by corporate interests. Content now focuses heavily on sponsored products and misleading hype rather than educational material.",
       "dateAdded": "2025-01-19",
       "source": "User report"
