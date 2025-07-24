@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "EnshitRadar",
-  "version": "1.0.0",
-  "description": "Detect YouTube channels compromised by private equity or experiencing quality decline. Get warned before watching content from channels that may no longer represent their original values.",
+  "version": "1.0.3",
+  "description": "Detect YouTube channels compromised by private equity.",
   "background": {
     "service_worker": "background.js"
   },
