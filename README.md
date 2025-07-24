@@ -9,7 +9,7 @@ A Chrome extension that detects YouTube channels compromised by private equity o
 - **📺 [YouTube Channel](https://www.youtube.com/@justmadlime)** - Updates & tutorials
 - **🚀 [Submit Channel](https://github.com/justmadlime/EnshitRadar/tree/main)** - Add new channels via PR
 
-<img width="1197" height="403" alt="image" src="https://github.com/user-attachments/assets/a36bcaa0-acc5-41fc-899c-522b43a90806" />
+<img width="1212" height="430" alt="image" src="https://github.com/user-attachments/assets/f71e4fdc-372f-4fe0-b897-3ab0a8613231" />
 
 ## 📖 User Guide
 
