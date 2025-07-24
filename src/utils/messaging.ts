@@ -51,7 +51,7 @@ export function setupMessageListener(
     handler(message, sender)
       .then(sendResponse)
       .catch((error) => {
-        console.error('Message handler error:', error);
+        console.error('[EnshitRadar] Message handler error:', error);
         sendResponse({ error: error.message });
       });
     

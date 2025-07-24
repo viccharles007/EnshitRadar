@@ -3,7 +3,7 @@ import { sendToBackground, getCurrentTab } from '@/utils/messaging';
 import { MessageType } from '@/types';
 import { channelDatabase } from '@/utils/channelDatabase';
 
-console.log('🔧 Popup script loaded');
+console.log('[EnshitRadar] 🔧 Popup script loaded');
 
 // Initialize popup when DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
@@ -22,9 +22,9 @@ async function initializePopup() {
     updateUI();
     setupEventListeners();
     
-    console.log('Popup initialized');
+    console.log('[EnshitRadar] Popup initialized');
   } catch (error) {
-    console.error('Failed to initialize popup:', error);
+    console.error('[EnshitRadar] Failed to initialize popup:', error);
     showError('Failed to load extension');
   }
 }
@@ -96,7 +96,7 @@ async function handleToggle() {
     
     // If disabling, cleanup session data first
     if (!newEnabled) {
-      console.log('🧹 Extension being disabled - cleaning up session data');
+      console.log('[EnshitRadar] 🧹 Extension being disabled - cleaning up session data');
       await cleanupSessionDataAllTabs();
     }
     
@@ -115,9 +115,9 @@ async function handleToggle() {
       });
     }
     
-    console.log('Extension toggled:', newEnabled);
+    console.log('[EnshitRadar] Extension toggled:', newEnabled);
   } catch (error) {
-    console.error('Failed to toggle extension:', error);
+    console.error('[EnshitRadar] Failed to toggle extension:', error);
     showError('Failed to toggle extension');
   }
 }
@@ -134,15 +134,15 @@ async function cleanupSessionDataAllTabs() {
           });
         } catch (error) {
           // Tab might not have content script loaded
-          console.debug('Could not send cleanup message to tab:', tab.id);
+          console.debug('[EnshitRadar] Could not send cleanup message to tab:', tab.id);
         }
       }
     });
     
     await Promise.allSettled(cleanupPromises);
-    console.log('✅ Session cleanup sent to all tabs');
+    console.log('[EnshitRadar] ✅ Session cleanup sent to all tabs');
   } catch (error) {
-    console.error('❌ Failed to cleanup session data:', error);
+    console.error('[EnshitRadar] ❌ Failed to cleanup session data:', error);
   }
 }
 
@@ -200,7 +200,7 @@ function updateDatabaseStats() {
     statsSection.style.display = 'block';
     
   } catch (error) {
-    console.error('Failed to update database stats:', error);
+    console.error('[EnshitRadar] Failed to update database stats:', error);
   }
 }
 

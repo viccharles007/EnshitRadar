@@ -157,15 +157,15 @@ async function handleCleanupSession() {
 
 function handleDiscordClick(event: Event) {
   event.preventDefault();
-  chrome.tabs.create({ url: 'https://discord.gg/enshitradar' });
+  chrome.tabs.create({ url: 'https://discord.gg/brCNpJcx' });
 }
 
 function handleYouTubeClick(event: Event) {
   event.preventDefault();
-  chrome.tabs.create({ url: 'https://youtube.com/@enshitradar' });
+  chrome.tabs.create({ url: 'https://www.youtube.com/@justmadlime' });
 }
 
 function handleGitHubClick(event: Event) {
   event.preventDefault();
-  chrome.tabs.create({ url: 'https://github.com/your-username/enshitradar' });
+  chrome.tabs.create({ url: 'https://github.com/justmadlime/EnshitRadar' });
 } 

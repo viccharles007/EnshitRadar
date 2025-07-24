@@ -2,17 +2,17 @@
 import { ExtensionMessage, MessageType, ExtensionSettings } from '@/types';
 import { setupMessageListener } from '@/utils/messaging';
 
-console.log('🚀 Background service worker loaded');
+console.log('[EnshitRadar] 🚀 Background service worker loaded');
 
 // Initialize extension on startup
 chrome.runtime.onStartup.addListener(() => {
-  console.log('Extension startup');
+  console.log('[EnshitRadar] Extension startup');
   initializeExtension();
 });
 
 // Initialize extension on installation
 chrome.runtime.onInstalled.addListener((details) => {
-  console.log('Extension installed:', details.reason);
+  console.log('[EnshitRadar] Extension installed:', details.reason);
   initializeExtension();
   
   if (details.reason === 'install') {
@@ -23,32 +23,32 @@ chrome.runtime.onInstalled.addListener((details) => {
 
 // Clean up when extension is suspended/disabled
 chrome.runtime.onSuspend.addListener(() => {
-  console.log('🧹 Extension is being suspended/disabled - cleaning up data');
+  console.log('[EnshitRadar] 🧹 Extension is being suspended/disabled - cleaning up data');
   cleanupExtensionData();
 });
 
 // Clean up when extension is suspended with more explicit handling
 chrome.runtime.onSuspendCanceled.addListener(() => {
-  console.log('Extension suspend was canceled');
+  console.log('[EnshitRadar] Extension suspend was canceled');
 });
 
 // Handle tab updates
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url) {
-    console.log('Tab updated:', tab.url);
+    console.log('[EnshitRadar] Tab updated:', tab.url);
     // Add any tab-specific logic here
   }
 });
 
 // Handle browser action click (if no popup is set)
 chrome.action.onClicked.addListener((tab) => {
-  console.log('Action clicked for tab:', tab.id);
+  console.log('[EnshitRadar] Action clicked for tab:', tab.id);
   // This won't trigger if popup is set in manifest
 });
 
 // Set up message handling
 setupMessageListener(async (message: ExtensionMessage, sender) => {
-  console.log('Background received message:', message.type, message.payload);
+  console.log('[EnshitRadar] Background received message:', message.type, message.payload);
   
   switch (message.type) {
     case MessageType.GET_TAB_INFO:
@@ -67,7 +67,7 @@ setupMessageListener(async (message: ExtensionMessage, sender) => {
       return await handleCleanupSessionData();
     
     default:
-      console.warn('Unknown message type:', message.type);
+      console.warn('[EnshitRadar] Unknown message type:', message.type);
       return { error: 'Unknown message type' };
   }
 });
@@ -77,12 +77,12 @@ setupMessageListener(async (message: ExtensionMessage, sender) => {
  */
 async function cleanupExtensionData() {
   try {
-    console.log('🧹 Starting comprehensive data cleanup...');
+    console.log('[EnshitRadar] 🧹 Starting comprehensive data cleanup...');
     
     // 1. Clear all chrome.storage data
     await chrome.storage.sync.clear();
     await chrome.storage.local.clear();
-    console.log('✅ Chrome storage cleared');
+    console.log('[EnshitRadar] ✅ Chrome storage cleared');
     
     // 2. Send cleanup messages to all active tabs
     const tabs = await chrome.tabs.query({});
@@ -95,26 +95,26 @@ async function cleanupExtensionData() {
           });
         } catch (error) {
           // Tab might not have content script loaded - this is fine
-          console.debug('Could not send cleanup message to tab:', tab.id);
+          console.debug('[EnshitRadar] Could not send cleanup message to tab:', tab.id);
         }
       }
     });
     
     await Promise.allSettled(cleanupPromises);
-    console.log('✅ Session cleanup messages sent to all tabs');
+    console.log('[EnshitRadar] ✅ Session cleanup messages sent to all tabs');
     
     // 3. Reset badge
     try {
       await chrome.action.setBadgeText({ text: '' });
       await chrome.action.setTitle({ title: 'EnshitRadar (Disabled)' });
     } catch (error) {
-      console.debug('Could not reset badge:', error);
+      console.debug('[EnshitRadar] Could not reset badge:', error);
     }
     
-    console.log('🎉 Extension cleanup completed successfully');
+    console.log('[EnshitRadar] 🎉 Extension cleanup completed successfully');
     
   } catch (error) {
-    console.error('❌ Failed to cleanup extension data:', error);
+    console.error('[EnshitRadar] ❌ Failed to cleanup extension data:', error);
   }
 }
 
@@ -122,7 +122,7 @@ async function cleanupExtensionData() {
  * Handle cleanup session data message
  */
 async function handleCleanupSessionData() {
-  console.log('Cleanup session data requested');
+  console.log('[EnshitRadar] Cleanup session data requested');
   // This will be handled by content scripts directly
   return { success: true };
 }
@@ -138,15 +138,15 @@ async function initializeExtension() {
       };
       
       await chrome.storage.sync.set({ settings: defaultSettings });
-      console.log('Default settings initialized');
+      console.log('[EnshitRadar] Default settings initialized');
     }
     
     // Always cleanup session data on startup (in case extension was disabled/enabled)
-    console.log('🧹 Cleaning up stale session data on startup');
+    console.log('[EnshitRadar] 🧹 Cleaning up stale session data on startup');
     await cleanupStaleSessionData();
     
   } catch (error) {
-    console.error('Failed to initialize extension:', error);
+    console.error('[EnshitRadar] Failed to initialize extension:', error);
   }
 }
 
@@ -165,15 +165,15 @@ async function cleanupStaleSessionData() {
           });
         } catch (error) {
           // Tab might not have content script loaded - this is fine
-          console.debug('Could not send startup cleanup to tab:', tab.id);
+          console.debug('[EnshitRadar] Could not send startup cleanup to tab:', tab.id);
         }
       }
     });
     
     await Promise.allSettled(cleanupPromises);
-    console.log('✅ Startup session cleanup completed');
+    console.log('[EnshitRadar] ✅ Startup session cleanup completed');
   } catch (error) {
-    console.error('❌ Failed startup session cleanup:', error);
+    console.error('[EnshitRadar] ❌ Failed startup session cleanup:', error);
   }
 }
 
@@ -192,7 +192,7 @@ async function handleGetTabInfo(tabId?: number) {
       active: tab.active
     };
   } catch (error) {
-    console.error('Failed to get tab info:', error);
+    console.error('[EnshitRadar] Failed to get tab info:', error);
     return { error: 'Failed to get tab info' };
   }
 }
@@ -201,7 +201,7 @@ async function handleGetTabInfo(tabId?: number) {
 async function handleUpdateSettings(settings: ExtensionSettings) {
   try {
     await chrome.storage.sync.set({ settings });
-    console.log('Settings updated:', settings);
+    console.log('[EnshitRadar] Settings updated:', settings);
     
     // Notify all tabs about settings change
     const tabs = await chrome.tabs.query({});
@@ -214,21 +214,21 @@ async function handleUpdateSettings(settings: ExtensionSettings) {
           });
         } catch (error) {
           // Tab might not have content script loaded
-          console.debug('Could not send settings to tab:', tab.id, error.message);
+          console.debug('[EnshitRadar] Could not send settings to tab:', tab.id, error.message);
         }
       }
     }
     
     return { success: true };
   } catch (error) {
-    console.error('Failed to update settings:', error);
+    console.error('[EnshitRadar] Failed to update settings:', error);
     return { error: 'Failed to update settings' };
   }
 }
 
 // Handle content script loaded notification
 async function handleContentLoaded(payload: any, sender: chrome.runtime.MessageSender) {
-  console.log('Content script loaded on:', payload?.url, 'from tab:', sender.tab?.id);
+  console.log('[EnshitRadar] Content script loaded on:', payload?.url, 'from tab:', sender.tab?.id);
   
   // Send current settings to the newly loaded content script
   try {
@@ -240,7 +240,7 @@ async function handleContentLoaded(payload: any, sender: chrome.runtime.MessageS
       });
     }
   } catch (error) {
-    console.error('Failed to send settings to content script:', error);
+    console.error('[EnshitRadar] Failed to send settings to content script:', error);
   }
   
   return { success: true };
@@ -248,11 +248,11 @@ async function handleContentLoaded(payload: any, sender: chrome.runtime.MessageS
 
 // Handle feature toggle
 async function handleToggleFeature(payload: { enabled: boolean }) {
-  console.log('Feature toggled:', payload.enabled);
+  console.log('[EnshitRadar] Feature toggled:', payload.enabled);
   
   // If disabling, cleanup session data across all tabs
   if (!payload.enabled) {
-    console.log('🧹 Extension disabled - cleaning up session data');
+    console.log('[EnshitRadar] 🧹 Extension disabled - cleaning up session data');
     await cleanupStaleSessionData();
   }
   
@@ -266,7 +266,7 @@ async function handleToggleFeature(payload: { enabled: boolean }) {
     await chrome.action.setBadgeText({ text: badgeText });
     await chrome.action.setBadgeBackgroundColor({ color: badgeColor });
   } catch (error) {
-    console.error('Failed to update badge:', error);
+    console.error('[EnshitRadar] Failed to update badge:', error);
   }
   
   return { success: true };

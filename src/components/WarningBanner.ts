@@ -218,7 +218,7 @@ export class WarningBanner {
    */
   private handleLearnMore(channelRating: ChannelRating): void {
     // Could open a modal or navigate to more information
-    console.log('Learn more about:', channelRating);
+    console.log('[EnshitRadar] Learn more about:', channelRating);
     
     // For now, show an alert with more info
     const message = `
@@ -326,7 +326,7 @@ This information helps you make informed decisions about the content you consume
       for (const selector of selectors) {
         targetContainer = document.querySelector(selector);
         if (targetContainer) {
-          console.log('📍 Found video container:', selector);
+          console.log('[EnshitRadar] 📍 Found video container:', selector);
           break;
         }
       }

@@ -7,9 +7,9 @@ import { WarningBanner, addWarningStyles } from '@/components/WarningBanner';
 
 // Prevent execution in sandboxed frames
 if (window.top !== window.self && window.frameElement) {
-  console.log('🚫 Skipping execution in iframe');
+  console.log('[EnshitRadar] 🚫 Skipping execution in iframe');
 } else {
-  console.log('🌐 Content script loaded on:', window.location.href);
+  console.log('[EnshitRadar] 🌐 Content script loaded on:', window.location.href);
   
   let currentSettings: ExtensionSettings | null = null;
   let currentWarningBanner: WarningBanner | null = null;
@@ -34,9 +34,9 @@ if (window.top !== window.self && window.frameElement) {
       // Initialize YouTube detection if on YouTube
       initializeYouTubeDetection();
       
-      console.log('Content script initialized with settings:', currentSettings);
+      console.log('[EnshitRadar] Content script initialized with settings:', currentSettings);
     } catch (error) {
-      console.error('Failed to initialize content script:', error);
+      console.error('[EnshitRadar] Failed to initialize content script:', error);
     }
   }
 
@@ -46,14 +46,14 @@ if (window.top !== window.self && window.frameElement) {
       const result = await chrome.storage.sync.get(['settings']);
       if (result.settings) {
         currentSettings = result.settings;
-        console.log('✅ Initial settings loaded:', currentSettings);
+        console.log('[EnshitRadar] ✅ Initial settings loaded:', currentSettings);
       } else {
         // Use default settings if none exist
         currentSettings = { enabled: true };
-        console.log('🔧 Using default settings:', currentSettings);
+        console.log('[EnshitRadar] 🔧 Using default settings:', currentSettings);
       }
     } catch (error) {
-      console.error('❌ Failed to load initial settings:', error);
+      console.error('[EnshitRadar] ❌ Failed to load initial settings:', error);
       // Fallback to default settings
       currentSettings = { enabled: true };
     }
@@ -64,15 +64,15 @@ if (window.top !== window.self && window.frameElement) {
     const pageInfo = detectYouTubePage();
     
     if (!pageInfo.isYouTube) {
-      console.log('Not on YouTube, skipping channel detection');
+      console.log('[EnshitRadar] Not on YouTube, skipping channel detection');
       return;
     }
     
-    console.log('🎬 YouTube page detected:', pageInfo);
+    console.log('[EnshitRadar] 🎬 YouTube page detected:', pageInfo);
     
     // Set up observer to watch for page changes (YouTube SPA)
     youtubeObserver = watchForYouTubeChanges((newPageInfo) => {
-      console.log('🔄 YouTube page changed:', newPageInfo);
+      console.log('[EnshitRadar] 🔄 YouTube page changed:', newPageInfo);
       handleYouTubePageChange(newPageInfo);
     });
   }
@@ -92,13 +92,13 @@ if (window.top !== window.self && window.frameElement) {
     
     // Check if extension is enabled
     if (currentSettings && !currentSettings.enabled) {
-      console.log('Extension disabled, skipping warning');
+      console.log('[EnshitRadar] Extension disabled, skipping warning');
       return;
     }
     
     // If settings haven't loaded yet, skip for now
     if (!currentSettings) {
-      console.log('Settings not loaded yet, skipping warning');
+      console.log('[EnshitRadar] Settings not loaded yet, skipping warning');
       return;
     }
     
@@ -110,10 +110,10 @@ if (window.top !== window.self && window.frameElement) {
 
   // Check channel against database and show warning if needed
   function checkChannelAndShowWarning(pageInfo: YouTubePageInfo) {
-    console.log('🔍 Checking channel info:', pageInfo);
+    console.log('[EnshitRadar] 🔍 Checking channel info:', pageInfo);
     
     if (!pageInfo.channelId && !pageInfo.channelName) {
-      console.log('❌ No channel information available');
+      console.log('[EnshitRadar] ❌ No channel information available');
       return;
     }
     
@@ -121,17 +121,17 @@ if (window.top !== window.self && window.frameElement) {
     const channelRating = channelDatabase.checkChannel(pageInfo.channelId, pageInfo.channelName);
     
     if (!channelRating) {
-      console.log('✅ Channel not in database:', pageInfo.channelName, 'ID:', pageInfo.channelId);
+      console.log('[EnshitRadar] ✅ Channel not in database:', pageInfo.channelName, 'ID:', pageInfo.channelId);
       return;
     }
     
     // Check if channel was dismissed for this session
     if (channelRating.channelId && WarningBanner.isChannelDismissed(channelRating.channelId)) {
-      console.log('🔇 Channel warning dismissed for session:', channelRating.channelName);
+      console.log('[EnshitRadar] 🔇 Channel warning dismissed for session:', channelRating.channelName);
       return;
     }
     
-    console.log('⚠️ Flagged channel detected:', channelRating);
+    console.log('[EnshitRadar] ⚠️ Flagged channel detected:', channelRating);
     
     // Create and show warning (we already checked pageType above)
     if (pageInfo.pageType === 'channel' || pageInfo.pageType === 'video') {
@@ -153,24 +153,24 @@ if (window.top !== window.self && window.frameElement) {
       const inserted = currentWarningBanner.insertIntoPage(pageType);
       
       if (!inserted) {
-        console.warn('Could not find suitable container for warning banner');
+        console.warn('[EnshitRadar] Could not find suitable container for warning banner');
         // Fallback: insert at top of body
         document.body.insertBefore(bannerElement, document.body.firstChild);
       }
       
-      console.log('✅ Warning banner displayed for:', channelRating.channelName);
+      console.log('[EnshitRadar] ✅ Warning banner displayed for:', channelRating.channelName);
       
       // Track warning display
       trackWarningDisplay(channelRating);
       
     } catch (error) {
-      console.error('Failed to show channel warning:', error);
+      console.error('[EnshitRadar] Failed to show channel warning:', error);
     }
   }
 
   // Set up message listener for communication with background/popup
   setupMessageListener(async (message: ExtensionMessage) => {
-    console.log('Content received message:', message.type, message.payload);
+    console.log('[EnshitRadar] Content received message:', message.type, message.payload);
     
     switch (message.type) {
       case MessageType.UPDATE_SETTINGS:
@@ -186,7 +186,7 @@ if (window.top !== window.self && window.frameElement) {
         return { success: true };
       
       default:
-        console.warn('Unknown message type in content script:', message.type);
+        console.warn('[EnshitRadar] Unknown message type in content script:', message.type);
         return { error: 'Unknown message type' };
     }
   });
@@ -194,7 +194,7 @@ if (window.top !== window.self && window.frameElement) {
   // Handle settings updates from background
   async function handleSettingsUpdate(settings: ExtensionSettings) {
     currentSettings = settings;
-    console.log('Settings updated in content script:', settings);
+    console.log('[EnshitRadar] Settings updated in content script:', settings);
     
     // Apply settings to the page
     toggleFeatures(settings.enabled);
@@ -202,11 +202,11 @@ if (window.top !== window.self && window.frameElement) {
 
   // Handle feature toggle
   async function handleFeatureToggle(payload: { enabled: boolean }) {
-    console.log('Feature toggled in content script:', payload.enabled);
+    console.log('[EnshitRadar] Feature toggled in content script:', payload.enabled);
     
     // If disabling, cleanup session data immediately
     if (!payload.enabled) {
-      console.log('🧹 Extension disabled - cleaning up session data in content script');
+      console.log('[EnshitRadar] 🧹 Extension disabled - cleaning up session data in content script');
       cleanupSessionData();
     }
     
@@ -218,7 +218,7 @@ if (window.top !== window.self && window.frameElement) {
 
   // Handle cleanup session data request
   async function handleCleanupSessionData(payload?: { reason?: string }) {
-    console.log('🧹 Cleaning up session data:', payload?.reason || 'unknown reason');
+    console.log('[EnshitRadar] 🧹 Cleaning up session data:', payload?.reason || 'unknown reason');
     cleanupSessionData();
   }
 
@@ -227,7 +227,7 @@ if (window.top !== window.self && window.frameElement) {
    */
   function cleanupSessionData() {
     try {
-      console.log('🧹 Cleaning up EnshitRadar session storage...');
+      console.log('[EnshitRadar] 🧹 Cleaning up EnshitRadar session storage...');
       
       // Remove dismissed channels from session storage
       const dismissedKey = 'enshit-radar-dismissed';
@@ -244,27 +244,27 @@ if (window.top !== window.self && window.frameElement) {
       
       keysToRemove.forEach(key => {
         sessionStorage.removeItem(key);
-        console.log(`🗑️ Removed session storage key: ${key}`);
+        console.log(`[EnshitRadar] 🗑️ Removed session storage key: ${key}`);
       });
       
       // Remove warning banners if any are currently displayed
       const existingWarnings = document.querySelectorAll('[data-enshit-radar-warning]');
       existingWarnings.forEach(warning => {
         warning.remove();
-        console.log('🗑️ Removed warning banner from DOM');
+        console.log('[EnshitRadar] 🗑️ Removed warning banner from DOM');
       });
       
       // Clean up current warning banner instance
       if (currentWarningBanner) {
         currentWarningBanner.remove();
         currentWarningBanner = null;
-        console.log('🗑️ Removed current warning banner instance');
+        console.log('[EnshitRadar] 🗑️ Removed current warning banner instance');
       }
       
-      console.log('✅ Session cleanup completed');
+      console.log('[EnshitRadar] ✅ Session cleanup completed');
       
     } catch (error) {
-      console.error('❌ Failed to cleanup session data:', error);
+      console.error('[EnshitRadar] ❌ Failed to cleanup session data:', error);
     }
   }
 
@@ -272,7 +272,7 @@ if (window.top !== window.self && window.frameElement) {
    * General cleanup function
    */
   function cleanup() {
-    console.log('🧹 General cleanup initiated');
+    console.log('[EnshitRadar] 🧹 General cleanup initiated');
     
     // Remove any displayed warnings
     const existingWarnings = document.querySelectorAll('[data-enshit-radar-warning]');
@@ -288,7 +288,7 @@ if (window.top !== window.self && window.frameElement) {
     if (youtubeObserver) {
       youtubeObserver.disconnect();
       youtubeObserver = null;
-      console.log('🛑 YouTube observer disconnected');
+      console.log('[EnshitRadar] 🛑 YouTube observer disconnected');
     }
   }
 
@@ -308,20 +308,20 @@ if (window.top !== window.self && window.frameElement) {
       stopFeatures();
     }
     
-    console.log('Features toggled:', enabled);
+    console.log('[EnshitRadar] Features toggled:', enabled);
   }
 
   // Start extension features
   function startFeatures() {
     // Add your main extension functionality here
-    console.log('Extension features started');
+    console.log('[EnshitRadar] Extension features started');
     
     // Floating button removed per user request
   }
 
   // Stop extension features
   function stopFeatures() {
-    console.log('Extension features stopped');
+    console.log('[EnshitRadar] Extension features stopped');
     cleanup();
   }
 
@@ -341,7 +341,7 @@ if (window.top !== window.self && window.frameElement) {
       subtree: true
     });
     
-    console.log('Page observer set up');
+    console.log('[EnshitRadar] Page observer set up');
   }
 
   // Handle dynamically added content
@@ -372,7 +372,7 @@ if (window.top !== window.self && window.frameElement) {
     `;
     
     document.head.appendChild(style);
-    console.log('Custom styles applied');
+    console.log('[EnshitRadar] Custom styles applied');
   }
 
   // Add floating button example
@@ -387,7 +387,7 @@ if (window.top !== window.self && window.frameElement) {
     button.title = 'EnshitRadar';
     
     button.addEventListener('click', () => {
-      console.log('Floating button clicked');
+      console.log('[EnshitRadar] Floating button clicked');
       // Add your click handler logic here
       alert('EnshitRadar extension is active!');
     });
@@ -410,7 +410,7 @@ if (window.top !== window.self && window.frameElement) {
       channelId: channelRating.channelId,
       channelName: channelRating.channelName
     }).catch(error => {
-      console.error('Failed to track warning display:', error);
+      console.error('[EnshitRadar] Failed to track warning display:', error);
     });
   }
 

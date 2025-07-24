@@ -25,7 +25,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
       await chrome.storage.sync.set({ settings: updatedSettings });
       set({ settings: updatedSettings });
     } catch (error) {
-      console.error('Failed to update settings:', error);
+      console.error('[EnshitRadar] Failed to update settings:', error);
     }
   },
 
@@ -36,7 +36,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
       const settings = result.settings || defaultSettings;
       set({ settings, loading: false });
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      console.error('[EnshitRadar] Failed to load settings:', error);
       set({ settings: defaultSettings, loading: false });
     }
   },
@@ -46,7 +46,7 @@ export const useSettingsStore = create<SettingsStore>((set, get) => ({
       await chrome.storage.sync.set({ settings: defaultSettings });
       set({ settings: defaultSettings });
     } catch (error) {
-      console.error('Failed to reset settings:', error);
+      console.error('[EnshitRadar] Failed to reset settings:', error);
     }
   }
 })); 

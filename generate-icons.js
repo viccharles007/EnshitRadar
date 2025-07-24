@@ -41,7 +41,7 @@ if (!fs.existsSync(assetsDir)) {
 // Generate SVG files (since we can't easily create PNG without additional libraries)
 const sizes = [16, 32, 48, 128];
 
-console.log('🔍 Generating EnshitRadar magnifying glass icons...\n');
+console.log('[EnshitRadar] 🔍 Generating EnshitRadar magnifying glass icons...\n');
 
 sizes.forEach(size => {
   const svgContent = createMagnifyingGlassIcon(size);
@@ -49,15 +49,15 @@ sizes.forEach(size => {
   const filepath = path.join(assetsDir, filename);
   
   fs.writeFileSync(filepath, svgContent);
-  console.log(`✅ Created ${filename} (${size}x${size} pixels)`);
+  console.log(`[EnshitRadar] ✅ Created ${filename} (${size}x${size} pixels)`);
 });
 
-console.log('\n📝 SVG icons created! To convert to PNG:');
-console.log('1. Open each SVG file in a browser');
-console.log('2. Take a screenshot or use online SVG-to-PNG converter');
-console.log('3. Save as PNG with same names (icon16.png, icon32.png, etc.)');
-console.log('4. Replace the SVG files with PNG files');
-console.log('\n🚀 Then run: pnpm run build');
+console.log('[EnshitRadar] \n📝 SVG icons created! To convert to PNG:');
+console.log('[EnshitRadar] 1. Open each SVG file in a browser');
+console.log('[EnshitRadar] 2. Take a screenshot or use online SVG-to-PNG converter');
+console.log('[EnshitRadar] 3. Save as PNG with same names (icon16.png, icon32.png, etc.)');
+console.log('[EnshitRadar] 4. Replace the SVG files with PNG files');
+console.log('[EnshitRadar] \n🚀 Then run: pnpm run build');
 
 // Create a simple HTML file to view and convert the icons
 const htmlContent = `
@@ -104,4 +104,4 @@ const htmlContent = `
 </html>`;
 
 fs.writeFileSync('convert-icons.html', htmlContent);
-console.log('\n💡 Also created convert-icons.html - open this to easily save PNG files!'); 
+console.log('[EnshitRadar] \n💡 Also created convert-icons.html - open this to easily save PNG files!'); 
