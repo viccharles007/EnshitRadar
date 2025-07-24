@@ -19,7 +19,6 @@ async function initializeOptions() {
     // Set up UI
     updateUI();
     setupEventListeners();
-    loadStatistics();
     
     console.log('Options page initialized');
   } catch (error) {
@@ -37,94 +36,60 @@ function updateUI() {
   
   // Update form controls
   const enabledToggle = document.getElementById('enabled-toggle') as HTMLInputElement;
-  
   enabledToggle.checked = settings.enabled;
-  
-  // Update debug toggle (stored separately)
-  loadDebugSetting();
 }
 
 function setupEventListeners() {
   // Setting controls
   const enabledToggle = document.getElementById('enabled-toggle') as HTMLInputElement;
-  const debugToggle = document.getElementById('debug-toggle') as HTMLInputElement;
   
+  // Event listeners
   enabledToggle.addEventListener('change', handleEnabledChange);
-  debugToggle.addEventListener('change', handleDebugChange);
   
   // Action buttons
-  const saveButton = document.getElementById('save-button') as HTMLButtonElement;
-  const resetButton = document.getElementById('reset-button') as HTMLButtonElement;
-  const exportButton = document.getElementById('export-button') as HTMLButtonElement;
-  const clearDataButton = document.getElementById('clear-data-button') as HTMLButtonElement;
+  document.getElementById('export-button')?.addEventListener('click', handleExport);
+  document.getElementById('clear-data-button')?.addEventListener('click', handleClearData);
+  document.getElementById('cleanup-session-button')?.addEventListener('click', handleCleanupSession);
   
-  saveButton.addEventListener('click', handleSave);
-  resetButton.addEventListener('click', handleReset);
-  exportButton.addEventListener('click', handleExport);
-  clearDataButton.addEventListener('click', handleClearData);
+  // Social links
+  document.getElementById('discord-link')?.addEventListener('click', handleDiscordClick);
+  document.getElementById('youtube-link')?.addEventListener('click', handleYouTubeClick);
+  document.getElementById('github-link')?.addEventListener('click', handleGitHubClick);
   
   // Subscribe to store changes
   useSettingsStore.subscribe(updateUI);
 }
 
 async function handleEnabledChange(event: Event) {
+  const checkbox = event.target as HTMLInputElement;
   try {
-    const checkbox = event.target as HTMLInputElement;
     await useSettingsStore.getState().updateSettings({ enabled: checkbox.checked });
-    showMessage('Extension status updated', 'success');
-  } catch (error) {
-    console.error('Failed to update enabled setting:', error);
-    showMessage('Failed to update setting', 'error');
-  }
-}
-
-
-
-async function handleDebugChange(event: Event) {
-  try {
-    const checkbox = event.target as HTMLInputElement;
-    await chrome.storage.local.set({ debug: checkbox.checked });
-    showMessage('Debug mode updated', 'success');
-  } catch (error) {
-    console.error('Failed to update debug setting:', error);
-    showMessage('Failed to update debug setting', 'error');
-  }
-}
-
-async function handleSave() {
-  try {
     showMessage('Settings saved successfully', 'success');
   } catch (error) {
     console.error('Failed to save settings:', error);
     showMessage('Failed to save settings', 'error');
+    // Revert checkbox state
+    checkbox.checked = !checkbox.checked;
   }
 }
 
-async function handleReset() {
-  if (confirm('Are you sure you want to reset all settings to their defaults? This action cannot be undone.')) {
-    try {
-      await useSettingsStore.getState().resetSettings();
-      await chrome.storage.local.remove(['debug', 'statistics']);
-      updateUI();
-      loadStatistics();
-      showMessage('Settings reset to defaults', 'success');
-    } catch (error) {
-      console.error('Failed to reset settings:', error);
-      showMessage('Failed to reset settings', 'error');
-    }
-  }
+function showMessage(message: string, type: 'success' | 'error') {
+  const statusMessage = document.getElementById('status-message') as HTMLElement;
+  statusMessage.textContent = message;
+  statusMessage.className = `status-message status-${type}`;
+  statusMessage.style.display = 'block';
+  
+  setTimeout(() => {
+    statusMessage.style.display = 'none';
+  }, 3000);
 }
 
 async function handleExport() {
   try {
     const settings = useSettingsStore.getState().settings;
-    const debugResult = await chrome.storage.local.get(['debug']);
-    const statisticsResult = await chrome.storage.local.get(['statistics']);
     
     const exportData = {
       settings,
-      debug: debugResult.debug || false,
-      statistics: statisticsResult.statistics || {},
       exportDate: new Date().toISOString(),
       version: '1.0.0'
     };
@@ -152,7 +117,6 @@ async function handleClearData() {
       await chrome.storage.local.clear();
       await useSettingsStore.getState().resetSettings();
       updateUI();
-      loadStatistics();
       showMessage('All data cleared successfully', 'success');
     } catch (error) {
       console.error('Failed to clear data:', error);
@@ -191,45 +155,17 @@ async function handleCleanupSession() {
   }
 }
 
-async function loadDebugSetting() {
-  try {
-    const result = await chrome.storage.local.get(['debug']);
-    const debugToggle = document.getElementById('debug-toggle') as HTMLInputElement;
-    debugToggle.checked = result.debug || false;
-  } catch (error) {
-    console.error('Failed to load debug setting:', error);
-  }
+function handleDiscordClick(event: Event) {
+  event.preventDefault();
+  chrome.tabs.create({ url: 'https://discord.gg/enshitradar' });
 }
 
-async function loadStatistics() {
-  try {
-    const result = await chrome.storage.local.get(['statistics']);
-    const stats = result.statistics || {
-      pagesProcessed: 0,
-      featuresDetected: 0,
-      timeSaved: 0
-    };
-    
-    const pagesElement = document.getElementById('pages-processed') as HTMLElement;
-    const featuresElement = document.getElementById('features-detected') as HTMLElement;
-    const timeElement = document.getElementById('time-saved') as HTMLElement;
-    
-    pagesElement.textContent = stats.pagesProcessed.toLocaleString();
-    featuresElement.textContent = stats.featuresDetected.toLocaleString();
-    timeElement.textContent = `${Math.round(stats.timeSaved / 60)}m`;
-  } catch (error) {
-    console.error('Failed to load statistics:', error);
-  }
+function handleYouTubeClick(event: Event) {
+  event.preventDefault();
+  chrome.tabs.create({ url: 'https://youtube.com/@enshitradar' });
 }
 
-function showMessage(message: string, type: 'success' | 'error') {
-  const messageElement = document.getElementById('status-message') as HTMLElement;
-  
-  messageElement.textContent = message;
-  messageElement.className = `status-message status-${type}`;
-  messageElement.style.display = 'block';
-  
-  setTimeout(() => {
-    messageElement.style.display = 'none';
-  }, 5000);
+function handleGitHubClick(event: Event) {
+  event.preventDefault();
+  chrome.tabs.create({ url: 'https://github.com/your-username/enshitradar' });
 } 

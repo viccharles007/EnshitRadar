@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "EnshitRadar",
   "version": "1.0.0",
-  "description": "A TypeScript Chrome Extension Template",
+  "description": "Detect YouTube channels compromised by private equity or experiencing quality decline. Get warned before watching content from channels that may no longer represent their original values.",
   "background": {
     "service_worker": "background.js"
   },
@@ -21,7 +21,19 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "EnshitRadar"
+    "default_title": "EnshitRadar - YouTube Channel Quality Monitor",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
   },
   "options_page": "options.html",
   "permissions": [

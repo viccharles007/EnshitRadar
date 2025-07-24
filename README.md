@@ -5,9 +5,9 @@ A Chrome extension that detects YouTube channels compromised by private equity o
 ## 🔗 Quick Links
 
 - **🏪 [Chrome Web Store](https://chrome.google.com/webstore/detail/enshitradar/)** - Install the extension
-- **💬 [Discord Community](https://discord.gg/enshitradar)** - Join discussions
-- **📺 [YouTube Channel](https://youtube.com/@enshitradar)** - Updates & tutorials
-- **🚀 [Submit Channel](https://github.com/your-username/enshitradar/pulls)** - Add new channels via PR
+- **💬 [Discord Community](https://discord.gg/brCNpJcx)** - Join to discuss and propose new ideas
+- **📺 [YouTube Channel](https://www.youtube.com/@justmadlime)** - Updates & tutorials
+- **🚀 [Submit Channel](https://github.com/justmadlime/EnshitRadar/tree/main)** - Add new channels via PR
 
 ## 📖 User Guide
 
@@ -100,63 +100,6 @@ For direct contributions:
 ### **Manual Cleanup**
 
 Options page → "Cleanup Session Data" button clears dismissed warnings
-
-## 🛠️ Developer Information
-
-### **Tech Stack**
-
-- **TypeScript** + **Webpack** + **Manifest V3**
-- **Zustand** for state management
-- **ESLint + Prettier** for code quality
-
-### **Quick Start**
-
-```bash
-git clone <repo>
-cd EnshitRadar
-pnpm install
-pnpm run build          # Build extension
-pnpm run dev           # Development mode
-```
-
-Load `dist/` folder in Chrome via `chrome://extensions/` → "Load unpacked"
-
-### **Project Structure**
-
-```
-src/
-├── background/        # Service worker
-├── content/          # YouTube page scripts
-├── popup/            # Extension popup UI
-├── options/          # Settings page
-├── data/             # Channel database
-├── utils/            # Shared utilities
-└── types/            # TypeScript definitions
-```
-
-### **Available Commands**
-
-```bash
-pnpm run build        # Production build
-pnpm run dev          # Development with watch
-pnpm run lint         # Check code quality
-pnpm run format       # Fix formatting
-pnpm run package      # Build + zip for store
-```
-
-## 📚 Resources & Support
-
-### **Support**
-
-- **🐛 [Report Issues](https://github.com/your-username/enshitradar/issues)**
-- **💬 [Discord Server](https://discord.gg/enshitradar)**
-- **📧 [Contact](mailto:support@enshitradar.com)**
-
-### **Documentation**
-
-- **[Chrome Extensions](https://developer.chrome.com/docs/extensions/)**
-- **[Manifest V3](https://developer.chrome.com/docs/extensions/migrating/)**
-- **[TypeScript](https://www.typescriptlang.org/docs/)**
 
 ---
 
