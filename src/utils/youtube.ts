@@ -189,44 +189,159 @@ function extractChannelInfoFromVideo(): { channelId?: string; channelName?: stri
 export function watchForYouTubeChanges(callback: (pageInfo: YouTubePageInfo) => void) {
   let currentUrl = window.location.href;
   let currentPageInfo = detectYouTubePage();
+  let navigationDetected = false;
   
   // Initial callback
   callback(currentPageInfo);
   
-  // Watch for URL changes (YouTube SPA navigation)
-  const observer = new MutationObserver(() => {
+  // Create a more robust navigation detection system
+  const handleNavigation = (source: string) => {
     const newUrl = window.location.href;
     if (newUrl !== currentUrl) {
       currentUrl = newUrl;
+      navigationDetected = true;
       
-      // Wait a bit for DOM to update after navigation
-      setTimeout(() => {
-        const newPageInfo = detectYouTubePage();
-        if (JSON.stringify(newPageInfo) !== JSON.stringify(currentPageInfo)) {
-          currentPageInfo = newPageInfo;
-          callback(newPageInfo);
+      console.log(`[EnshitRadar] 🚀 Navigation detected via ${source}:`, newUrl);
+      
+      // Clear any existing timeouts and check multiple times with increasing delays
+      // This handles cases where content loads slowly
+      const checkAndCallback = (attempt: number, delay: number) => {
+        setTimeout(() => {
+          const newPageInfo = detectYouTubePage();
+          const hasChanged = JSON.stringify(newPageInfo) !== JSON.stringify(currentPageInfo);
+          
+          console.log(`[EnshitRadar] 🔍 Check attempt ${attempt} (${delay}ms):`, {
+            hasChanged,
+            newPageInfo,
+            currentPageInfo
+          });
+          
+          if (hasChanged) {
+            currentPageInfo = newPageInfo;
+            callback(newPageInfo);
+          } else if (attempt < 6) {
+            // If no change detected and we haven't reached max attempts, try again
+            checkAndCallback(attempt + 1, delay + 500);
+          }
+        }, delay);
+      };
+      
+      // Multiple attempts with increasing delays to handle slow-loading content
+      checkAndCallback(1, 200);   // Quick check
+      checkAndCallback(2, 800);   // Medium delay
+      checkAndCallback(3, 1500);  // Longer delay
+      checkAndCallback(4, 3000);  // Very long delay for very slow content
+    }
+  };
+
+  // Method 1: Intercept pushState and replaceState (most reliable for SPA navigation)
+  const originalPushState = history.pushState;
+  const originalReplaceState = history.replaceState;
+  
+  history.pushState = function(...args) {
+    originalPushState.apply(history, args);
+    handleNavigation('pushState');
+  };
+  
+  history.replaceState = function(...args) {
+    originalReplaceState.apply(history, args);
+    handleNavigation('replaceState');
+  };
+  
+  // Method 2: Listen for popstate events (back/forward navigation)
+  window.addEventListener('popstate', () => {
+    handleNavigation('popstate');
+  });
+  
+  // Method 3: Watch for specific YouTube SPA indicators
+  let lastVideoId = new URLSearchParams(window.location.search).get('v');
+  const observer = new MutationObserver((mutations) => {
+    // Check if URL changed (additional safety net)
+    const newUrl = window.location.href;
+    if (newUrl !== currentUrl) {
+      handleNavigation('mutationObserver-url');
+      return;
+    }
+    
+    // Check for video ID changes (important for YouTube)
+    const currentVideoId = new URLSearchParams(window.location.search).get('v');
+    if (currentVideoId !== lastVideoId) {
+      lastVideoId = currentVideoId;
+      handleNavigation('mutationObserver-videoId');
+      return;
+    }
+    
+         // Watch for specific YouTube content changes that indicate navigation
+     for (const mutation of mutations) {
+       if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+         for (const node of Array.from(mutation.addedNodes)) {
+           if (node.nodeType === Node.ELEMENT_NODE) {
+            const element = node as Element;
+            
+            // Look for key YouTube page elements that indicate content has changed
+            if (element.matches?.([
+              'ytd-watch-flexy',           // Video page main container
+              'ytd-browse[page-subtype="channels"]', // Channel page
+              'ytd-two-column-browse-results-renderer', // Browse results
+              '#primary',                   // Primary content area
+              '#secondary',                 // Secondary content area
+              'ytd-page-manager',          // YouTube's page manager
+              'ytd-app'                    // Main app container
+            ].join(', ')) || element.querySelector?.([
+              'ytd-watch-flexy',
+              'ytd-browse[page-subtype="channels"]',
+              'ytd-two-column-browse-results-renderer',
+              '#primary',
+              '#secondary'
+            ].join(', '))) {
+              handleNavigation('mutationObserver-content');
+              return;
+            }
+          }
         }
-      }, 500);
+      }
     }
   });
   
   observer.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
+    attributes: false,
+    attributeOldValue: false,
+    characterData: false,
+    characterDataOldValue: false
   });
   
-  // Also listen for popstate events
-  window.addEventListener('popstate', () => {
-    setTimeout(() => {
-      const newPageInfo = detectYouTubePage();
-      if (JSON.stringify(newPageInfo) !== JSON.stringify(currentPageInfo)) {
-        currentPageInfo = newPageInfo;
-        callback(newPageInfo);
-      }
-    }, 500);
+  // Method 4: Watch for title changes (additional indicator)
+  let lastTitle = document.title;
+  const titleObserver = new MutationObserver(() => {
+    if (document.title !== lastTitle) {
+      lastTitle = document.title;
+      // Small delay to let URL update as well
+      setTimeout(() => {
+        handleNavigation('titleChange');
+      }, 100);
+    }
   });
   
-  return observer;
+  const titleElement = document.querySelector('title');
+  if (titleElement) {
+    titleObserver.observe(titleElement, { childList: true });
+  }
+  
+  // Cleanup function
+  const cleanup = () => {
+    observer.disconnect();
+    titleObserver.disconnect();
+    history.pushState = originalPushState;
+    history.replaceState = originalReplaceState;
+  };
+  
+  // Return the main observer for backward compatibility, but also provide cleanup
+  const mainObserver = observer as MutationObserver & { cleanup?: () => void };
+  mainObserver.cleanup = cleanup;
+  
+  return mainObserver;
 }
 
 /**

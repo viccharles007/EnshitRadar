@@ -61,7 +61,7 @@ export class WarningBanner {
    * Apply CSS styles to the banner
    */
   private applyStyles(banner: HTMLElement, config: WarningConfig): void {
-    // Main banner styles
+    // Main banner styles - full width by default (good for video pages)
     Object.assign(banner.style, {
       position: 'relative',
       width: '100%',
@@ -75,7 +75,8 @@ export class WarningBanner {
       boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
       marginBottom: '16px',
       zIndex: '10000',
-      animation: 'enshitRadarSlideIn 0.3s ease-out'
+      animation: 'enshitRadarSlideIn 0.3s ease-out',
+      boxSizing: 'border-box'
     });
 
     // Content container
@@ -300,17 +301,47 @@ This information helps you make informed decisions about the content you consume
     let targetContainer: Element | null = null;
 
     if (pageType === 'channel') {
-      // Insert after channel header
-      const selectors = [
+      // Insert above the entire channel header area
+      const channelHeaderSelectors = [
         '#channel-header-container',
         '.ytd-c4-tabbed-header-renderer',
         '#channel-header',
-        '.channel-header'
+        'ytd-channel-header-view-model-renderer',
+        '#page-header'
       ];
       
-      for (const selector of selectors) {
+      // Find the channel header element first
+      let channelHeaderElement: Element | null = null;
+      for (const selector of channelHeaderSelectors) {
+        channelHeaderElement = document.querySelector(selector);
+        if (channelHeaderElement) {
+          console.log('[EnshitRadar] 📍 Found channel header:', selector);
+          break;
+        }
+      }
+      
+              if (channelHeaderElement && channelHeaderElement.parentNode) {
+          // Insert the banner above the entire channel header
+          channelHeaderElement.parentNode.insertBefore(this.element, channelHeaderElement);
+          // Only adjust width for channel pages
+          this.adjustChannelBannerWidth();
+          return true;
+        }
+      
+      // Fallback: try to insert at the beginning of main content containers
+      const fallbackSelectors = [
+        '#primary-inner',
+        '#primary .ytd-browse',
+        'ytd-browse[page-subtype="channels"] #primary',
+        '#contents.ytd-browse'
+      ];
+      
+      for (const selector of fallbackSelectors) {
         targetContainer = document.querySelector(selector);
-        if (targetContainer) break;
+        if (targetContainer) {
+          console.log('[EnshitRadar] 📍 Found fallback container:', selector);
+          break;
+        }
       }
     } else if (pageType === 'video') {
       // Insert before video title/info
@@ -339,10 +370,28 @@ This information helps you make informed decisions about the content you consume
       } else {
         targetContainer.appendChild(this.element);
       }
+      
       return true;
     }
 
     return false;
+  }
+
+  /**
+   * Adjust banner width on channel pages to be properly sized and centered
+   */
+  private adjustChannelBannerWidth(): void {
+    if (!this.element) return;
+    
+    // Make the banner appropriately sized and centered
+    Object.assign(this.element.style, {
+      width: '80%',
+      maxWidth: '1200px',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      marginTop: '16px',
+      boxSizing: 'border-box'
+    });
   }
 }
 

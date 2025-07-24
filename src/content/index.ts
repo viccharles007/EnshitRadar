@@ -13,7 +13,7 @@ if (window.top !== window.self && window.frameElement) {
   
   let currentSettings: ExtensionSettings | null = null;
   let currentWarningBanner: WarningBanner | null = null;
-  let youtubeObserver: MutationObserver | null = null;
+  let youtubeObserver: (MutationObserver & { cleanup?: () => void }) | null = null;
 
   // Initialize content script
   async function initializeContentScript() {
@@ -70,6 +70,15 @@ if (window.top !== window.self && window.frameElement) {
     
     console.log('[EnshitRadar] 🎬 YouTube page detected:', pageInfo);
     
+    // Clean up any existing observer
+    if (youtubeObserver) {
+      if (typeof youtubeObserver.cleanup === 'function') {
+        youtubeObserver.cleanup();
+      } else {
+        youtubeObserver.disconnect();
+      }
+    }
+    
     // Set up observer to watch for page changes (YouTube SPA)
     youtubeObserver = watchForYouTubeChanges((newPageInfo) => {
       console.log('[EnshitRadar] 🔄 YouTube page changed:', newPageInfo);
@@ -102,10 +111,12 @@ if (window.top !== window.self && window.frameElement) {
       return;
     }
     
-    // Try immediately, then retry with delays to handle slow-loading content
-    setTimeout(() => checkChannelAndShowWarning(pageInfo), 500);
-    setTimeout(() => checkChannelAndShowWarning(pageInfo), 1500);
-    setTimeout(() => checkChannelAndShowWarning(pageInfo), 3000);
+    // Try immediately, then retry with longer delays to handle slow-loading content
+    // The navigation detection now handles multiple retry attempts, but we'll keep this as a fallback
+    setTimeout(() => checkChannelAndShowWarning(pageInfo), 100);
+    setTimeout(() => checkChannelAndShowWarning(pageInfo), 800);
+    setTimeout(() => checkChannelAndShowWarning(pageInfo), 2000);
+    setTimeout(() => checkChannelAndShowWarning(pageInfo), 4000);
   }
 
   // Check channel against database and show warning if needed
@@ -286,7 +297,11 @@ if (window.top !== window.self && window.frameElement) {
     
     // Stop watching for YouTube changes if we have an observer
     if (youtubeObserver) {
-      youtubeObserver.disconnect();
+      if (typeof youtubeObserver.cleanup === 'function') {
+        youtubeObserver.cleanup();
+      } else {
+        youtubeObserver.disconnect();
+      }
       youtubeObserver = null;
       console.log('[EnshitRadar] 🛑 YouTube observer disconnected');
     }
@@ -424,7 +439,11 @@ if (window.top !== window.self && window.frameElement) {
   // Cleanup on page unload
   window.addEventListener('beforeunload', () => {
     if (youtubeObserver) {
-      youtubeObserver.disconnect();
+      if (typeof youtubeObserver.cleanup === 'function') {
+        youtubeObserver.cleanup();
+      } else {
+        youtubeObserver.disconnect();
+      }
     }
     if (currentWarningBanner) {
       currentWarningBanner.remove();
