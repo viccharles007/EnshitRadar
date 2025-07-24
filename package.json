@@ -1,7 +1,7 @@
 {
   "name": "enshit-radar",
   "version": "1.0.0",
-  "description": "A TypeScript Chrome Extension Template",
+  "description": "Extension to detect YouTube channels bought by Private Equity – and More",
   "scripts": {
     "build": "webpack --mode=production",
     "build:dev": "webpack --mode=development",

@@ -1,6 +1,12 @@
-# 🔍 EnshitRadar - Chrome Extension Template
+# 🔍 EnshitRadar - YouTube Channel Quality Monitor
 
-A modern, comprehensive TypeScript Chrome extension template with best practices, featuring Manifest V3, Zustand state management, and a complete development workflow.
+A Chrome extension that detects YouTube channels that have been compromised by private equity or experienced significant quality decline. Get warned before watching content from channels that may no longer represent their original values.
+
+## 🔗 Links
+
+- **🏪 [Chrome Web Store](https://chrome.google.com/webstore/detail/enshitradar/)** - Install the extension
+- **💬 [Discord Community](https://discord.gg/enshitradar)** - Join our community discussions
+- **📺 [YouTube Channel](https://youtube.com/@enshitradar)** - Updates and tutorials
 
 ## ✨ Features
 
@@ -83,47 +89,6 @@ src/
    - Open Chrome and go to `chrome://extensions/`
    - Enable "Developer mode"
    - Click "Load unpacked" and select the `dist` folder
-
-## 🔧 Development
-
-### Available Commands
-
-You can use either **npm/pnpm scripts** or **Make commands**:
-
-#### NPM/PNPM Scripts
-
-| Script                | Description                               |
-| --------------------- | ----------------------------------------- |
-| `pnpm install`        | Install dependencies                      |
-| `pnpm run dev`        | Start development mode with file watching |
-| `pnpm run build`      | Build for production                      |
-| `pnpm run debug`      | Build and show loading instructions       |
-| `pnpm run lint`       | Run ESLint                                |
-| `pnpm run lint:fix`   | Fix ESLint errors automatically           |
-| `pnpm run format`     | Format code with Prettier                 |
-| `pnpm run type-check` | Run TypeScript type checking              |
-| `pnpm run check`      | Run all checks (type, lint, format)       |
-| `pnpm run fix`        | Fix all linting and formatting issues     |
-| `pnpm run package`    | Build and create zip file                 |
-| `pnpm run setup`      | Install dependencies and build            |
-
-#### Make Commands (wrappers around npm scripts)
-
-| Command           | Description                               |
-| ----------------- | ----------------------------------------- |
-| `make install`    | Install dependencies                      |
-| `make dev`        | Start development mode with file watching |
-| `make build`      | Build for production                      |
-| `make debug`      | Build and open Chrome extensions page     |
-| `make lint`       | Run ESLint                                |
-| `make lint-fix`   | Fix ESLint errors automatically           |
-| `make format`     | Format code with Prettier                 |
-| `make type-check` | Run TypeScript type checking              |
-| `make check`      | Run all checks (type, lint, format)       |
-| `make fix`        | Fix all linting and formatting issues     |
-| `make zip`        | Build and create distribution zip file    |
-| `make setup`      | Install dependencies and build            |
-| `make clean`      | Clean build directory                     |
 
 ### Development Workflow
 
@@ -233,6 +198,31 @@ The extension requests these permissions:
 - `activeTab` - For accessing current tab
 - `<all_urls>` - For content script injection (adjust as needed)
 
+## 🧹 Data Management & Privacy
+
+### Automatic Cleanup
+
+The extension automatically cleans up all stored data when:
+
+- **Extension is disabled** - All `chrome.storage` and `sessionStorage` data is cleared
+- **Extension is uninstalled** - Chrome automatically removes all extension data
+- **Browser is closed** - Session storage is automatically cleared
+
+### Manual Cleanup
+
+You can manually clean session data by:
+
+1. **Options Page**: Go to `chrome://extensions/` → EnshitRadar → Options → "Cleanup Session Data"
+2. **Code**: The extension provides cleanup utilities for developers
+
+### Data Storage
+
+The extension stores:
+
+- **Settings** in `chrome.storage.sync` (syncs across devices)
+- **Statistics** in `chrome.storage.local` (local only)
+- **Dismissed warnings** in `sessionStorage` (temporary, per-tab)
+
 ## 🎨 Customization
 
 ### Adding New Features
@@ -312,12 +302,176 @@ Add `.env` support by:
 2. Configuring in `webpack.config.js`
 3. Adding environment-specific builds
 
+## ✅ TODO
+
+### **High Priority**
+
+- [ ] Add icon files for the extension (16x16, 32x32, 48x48, 128x128)
+- [ ] Implement channel database auto-updates from remote source
+- [ ] Add user reporting system for new channels
+- [ ] Create comprehensive testing suite
+
+### **Medium Priority**
+
+- [ ] Add localization support (i18n)
+- [ ] Implement custom channel whitelisting
+- [ ] Add notification system for database updates
+- [ ] Create analytics dashboard for detected channels
+
+### **Low Priority**
+
+- [ ] Add dark/light theme toggle
+- [ ] Implement keyboard shortcuts
+- [ ] Add export/import for custom channel lists
+- [ ] Create browser notification system
+
+### **Community Features**
+
+- [ ] User voting system for channel ratings
+- [ ] Community-driven channel submissions
+- [ ] Integration with external quality tracking APIs
+- [ ] Social sharing of flagged channels
+
 ## 📚 Resources
+
+### **Extension Development**
 
 - [Chrome Extension Documentation](https://developer.chrome.com/docs/extensions/)
 - [Manifest V3 Migration Guide](https://developer.chrome.com/docs/extensions/migrating/)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/)
 - [Zustand Documentation](https://github.com/pmndrs/zustand)
+
+### **Community & Support**
+
+- [🔗 Chrome Web Store](https://chrome.google.com/webstore/detail/enshitrador/)
+- [💬 Discord Server](https://discord.gg/enshitradar)
+- [📺 YouTube Channel](https://youtube.com/@enshitradar)
+- [🐛 Report Issues](https://github.com/your-username/enshitradar/issues)
+- [📧 Contact](mailto:support@enshitradar.com)
+
+## 📖 User Guide
+
+### **Getting Started**
+
+1. **Install the Extension**
+   - Visit the [Chrome Web Store page](https://chrome.google.com/webstore/detail/enshitrador/)
+   - Click "Add to Chrome"
+   - Grant the necessary permissions
+
+2. **First Setup**
+   - Click the EnshitRadar icon in your browser toolbar
+   - The extension is enabled by default
+   - Visit any YouTube channel or video to see it in action
+
+### **How It Works**
+
+When you visit YouTube, EnshitRadar automatically:
+
+1. **Detects the channel** you're viewing (works on both channel pages and individual videos)
+2. **Checks our database** for any quality concerns or ownership changes
+3. **Shows a warning banner** if the channel has been flagged
+4. **Lets you dismiss** warnings temporarily for your current session
+
+### **Warning Levels**
+
+- **🟢 Low Risk** - Minor commercialization, still mostly trustworthy
+- **🟡 Medium Risk** - Noticeable quality decline, increased sponsored content
+- **🟠 High Risk** - Significant concerns, heavily commercialized content
+- **🔴 Confirmed** - Sold to private equity or completely compromised
+
+### **Managing Warnings**
+
+- **Close**: Remove the warning for this page visit
+- **Dismiss for Session**: Hide warnings for this channel until you close your browser
+- **Learn More**: Get detailed information about why the channel was flagged
+
+### **Extension Settings**
+
+Access settings by:
+
+- Clicking the extension icon → "Options"
+- Or going to `chrome://extensions/` → EnshitRadar → "Options"
+
+Available options:
+
+- **Enable/Disable** the extension
+- **View Statistics** about detected channels
+- **Export Settings** for backup
+- **Clear All Data** for privacy
+- **Manual Cleanup** of session data
+
+## 🔍 **EnshitRadar Features**
+
+### **YouTube Channel Monitoring**
+
+The extension automatically detects when you visit YouTube and checks channels against a curated database of channels that have experienced quality decline or been compromised by private equity.
+
+### **Warning System**
+
+When you visit a flagged channel or watch their videos, you'll see a prominent warning banner with:
+
+- **🟢 Low Risk** - Minor quality decline, some commercialization
+- **🟡 Medium Risk** - Significant commercialization, expect more sponsored content
+- **🟠 High Risk** - Heavily compromised, misleading content likely
+- **🔴 Confirmed** - Sold to private equity, original creators may be gone
+
+### **Channel Database**
+
+The database is stored in `src/data/channels.json` and includes:
+
+```json
+{
+  "channelId": "UCblfuW_4rakIf2h6aqANefA",
+  "channelName": "Example Channel",
+  "level": "middle",
+  "description": "Custom warning message (optional)",
+  "dateAdded": "2024-01-15",
+  "source": "Community reports"
+}
+```
+
+### **Adding New Channels**
+
+To add channels to monitor:
+
+1. **Get Channel Info**:
+   - Visit the YouTube channel
+   - Copy the channel ID from URL (e.g., `/channel/UCxxxxx`)
+   - Note the exact channel name
+
+2. **Edit Database**:
+   - Open `src/data/channels.json`
+   - Add new entry to the `channels` array
+   - Choose appropriate risk level: `low`, `middle`, `high`, `confirmed`
+   - Provide custom description (optional)
+
+3. **Rebuild Extension**:
+
+   ```bash
+   pnpm run build
+   ```
+
+4. **Reload in Chrome**:
+   - Go to `chrome://extensions/`
+   - Click refresh ↻ on your extension
+
+### **Testing the Extension**
+
+1. **Test on Example Channel**:
+   - Visit `https://www.youtube.com/@kurzgesagt` (marked as "low" risk)
+   - You should see a green warning banner
+
+2. **Test Warning Dismissal**:
+   - Click "Dismiss for Session" to hide warning
+   - Navigate away and back - warning won't show again this session
+
+3. **Test Learn More**:
+   - Click "Learn More" for detailed channel information
+
+4. **Check Popup Stats**:
+   - Click extension icon to see database statistics
+
+The initial database includes **4 example channels** for testing. Update `src/data/channels.json` with real channels you want to monitor!
 
 ## 🤝 Contributing
 

@@ -1,0 +1,44 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-07-24T19:15:06+00:00",
+  "defaultDescriptions": {
+    "low": "⚠️ Caution: This channel may have experienced some quality decline. Content quality may be inconsistent.",
+    "middle": "⚠️ Warning: This channel has shown signs of significant commercialization. Expect more sponsored content and less authentic material.",
+    "high": "🚨 Alert: This channel has been heavily compromised. Expect misleading content, excessive ads, and corporate influence.",
+    "confirmed": "🛑 CONFIRMED: This channel has been sold or is controlled by private equity. Original creators may no longer have creative control."
+  },
+  "channels": [
+    {
+      "channelId": "UCblfuW_4rakIf2h6aqANefA",
+      "channelName": "Kurzgesagt – In a Nutshell",
+      "level": "low",
+      "description": "While still producing quality content, some recent videos show increased corporate influence and simplified messaging.",
+      "dateAdded": "2024-01-15",
+      "source": "Community reports"
+    },
+    {
+      "channelId": "UCsBjURrPoezykLs9EqgamOA",
+      "channelName": "Fireship",
+      "level": "confirmed",
+      "description": "Channel has been compromised by corporate interests. Content now focuses heavily on sponsored products and misleading hype rather than educational material.",
+      "dateAdded": "2025-01-19",
+      "source": "User report"
+    },
+    {
+      "channelId": "custom_Fireship",
+      "channelName": "Fireship",
+      "level": "confirmed",
+      "description": "Channel has been compromised by corporate interests. Content now focuses heavily on sponsored products and misleading hype rather than educational material.",
+      "dateAdded": "2025-01-19",
+      "source": "User report"
+    },
+    {
+      "channelId": "custom_fireship",
+      "channelName": "Fireship",
+      "level": "confirmed", 
+      "description": "Channel has been compromised by corporate interests. Content now focuses heavily on sponsored products and misleading hype rather than educational material.",
+      "dateAdded": "2025-01-19",
+      "source": "User report"
+    }
+  ]
+} 

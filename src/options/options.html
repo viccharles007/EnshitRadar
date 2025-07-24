@@ -280,32 +280,7 @@
           </div>
         </div>
         
-        <div class="setting-item">
-          <div class="setting-info">
-            <div class="setting-label">Theme</div>
-            <p class="setting-description">Choose your preferred theme</p>
-          </div>
-          <div class="setting-control">
-            <select id="theme-select" class="select-control">
-              <option value="auto">Auto (System)</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </select>
-          </div>
-        </div>
         
-        <div class="setting-item">
-          <div class="setting-info">
-            <div class="setting-label">Notifications</div>
-            <p class="setting-description">Receive notifications about extension activity</p>
-          </div>
-          <div class="setting-control">
-            <label class="toggle-switch">
-              <input type="checkbox" id="notifications-toggle">
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
       </section>
       
       <!-- Statistics -->
@@ -349,11 +324,14 @@
       <section class="section">
         <h2 class="section-title">Actions</h2>
         
-        <div class="button-group">
-          <button id="save-button" class="btn btn-primary">Save Settings</button>
-          <button id="reset-button" class="btn btn-secondary">Reset to Defaults</button>
-          <button id="export-button" class="btn btn-secondary">Export Settings</button>
-          <button id="clear-data-button" class="btn btn-danger">Clear All Data</button>
+        <div class="setting-item">
+          <h3>Data Management</h3>
+          <p>Manage your extension data and settings</p>
+          <div class="button-group">
+            <button id="export-button" class="button">Export Settings</button>
+            <button id="clear-data-button" class="button button-danger">Clear All Data</button>
+            <button id="cleanup-session-button" class="button button-secondary">Cleanup Session Data</button>
+          </div>
         </div>
       </section>
     </main>

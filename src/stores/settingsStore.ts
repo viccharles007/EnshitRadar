@@ -10,9 +10,7 @@ interface SettingsStore {
 }
 
 const defaultSettings: ExtensionSettings = {
-  enabled: true,
-  theme: 'auto',
-  notifications: true
+  enabled: true
 };
 
 export const useSettingsStore = create<SettingsStore>((set, get) => ({

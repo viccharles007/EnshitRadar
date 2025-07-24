@@ -21,6 +21,17 @@ chrome.runtime.onInstalled.addListener((details) => {
   }
 });
 
+// Clean up when extension is suspended/disabled
+chrome.runtime.onSuspend.addListener(() => {
+  console.log('🧹 Extension is being suspended/disabled - cleaning up data');
+  cleanupExtensionData();
+});
+
+// Clean up when extension is suspended with more explicit handling
+chrome.runtime.onSuspendCanceled.addListener(() => {
+  console.log('Extension suspend was canceled');
+});
+
 // Handle tab updates
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete' && tab.url) {
@@ -52,11 +63,69 @@ setupMessageListener(async (message: ExtensionMessage, sender) => {
     case MessageType.TOGGLE_FEATURE:
       return await handleToggleFeature(message.payload);
     
+    case MessageType.CLEANUP_SESSION_DATA:
+      return await handleCleanupSessionData();
+    
     default:
       console.warn('Unknown message type:', message.type);
       return { error: 'Unknown message type' };
   }
 });
+
+/**
+ * Cleanup all extension data when disabled
+ */
+async function cleanupExtensionData() {
+  try {
+    console.log('🧹 Starting comprehensive data cleanup...');
+    
+    // 1. Clear all chrome.storage data
+    await chrome.storage.sync.clear();
+    await chrome.storage.local.clear();
+    console.log('✅ Chrome storage cleared');
+    
+    // 2. Send cleanup messages to all active tabs
+    const tabs = await chrome.tabs.query({});
+    const cleanupPromises = tabs.map(async (tab) => {
+      if (tab.id) {
+        try {
+          await chrome.tabs.sendMessage(tab.id, {
+            type: MessageType.CLEANUP_SESSION_DATA,
+            payload: { reason: 'extension_disabled' }
+          });
+        } catch (error) {
+          // Tab might not have content script loaded - this is fine
+          console.debug('Could not send cleanup message to tab:', tab.id);
+        }
+      }
+    });
+    
+    await Promise.allSettled(cleanupPromises);
+    console.log('✅ Session cleanup messages sent to all tabs');
+    
+    // 3. Reset badge
+    try {
+      await chrome.action.setBadgeText({ text: '' });
+      await chrome.action.setTitle({ title: 'EnshitRadar (Disabled)' });
+    } catch (error) {
+      console.debug('Could not reset badge:', error);
+    }
+    
+    console.log('🎉 Extension cleanup completed successfully');
+    
+  } catch (error) {
+    console.error('❌ Failed to cleanup extension data:', error);
+  }
+}
+
+/**
+ * Handle cleanup session data message
+ */
+async function handleCleanupSessionData() {
+  console.log('Cleanup session data requested');
+  // This will be handled by content scripts directly
+  return { success: true };
+}
 
 // Initialize extension settings
 async function initializeExtension() {
@@ -65,16 +134,46 @@ async function initializeExtension() {
     
     if (!result.settings) {
       const defaultSettings: ExtensionSettings = {
-        enabled: true,
-        theme: 'auto',
-        notifications: true
+        enabled: true
       };
       
       await chrome.storage.sync.set({ settings: defaultSettings });
       console.log('Default settings initialized');
     }
+    
+    // Always cleanup session data on startup (in case extension was disabled/enabled)
+    console.log('🧹 Cleaning up stale session data on startup');
+    await cleanupStaleSessionData();
+    
   } catch (error) {
     console.error('Failed to initialize extension:', error);
+  }
+}
+
+/**
+ * Clean up stale session data on startup
+ */
+async function cleanupStaleSessionData() {
+  try {
+    const tabs = await chrome.tabs.query({});
+    const cleanupPromises = tabs.map(async (tab) => {
+      if (tab.id) {
+        try {
+          await chrome.tabs.sendMessage(tab.id, {
+            type: MessageType.CLEANUP_SESSION_DATA,
+            payload: { reason: 'extension_startup' }
+          });
+        } catch (error) {
+          // Tab might not have content script loaded - this is fine
+          console.debug('Could not send startup cleanup to tab:', tab.id);
+        }
+      }
+    });
+    
+    await Promise.allSettled(cleanupPromises);
+    console.log('✅ Startup session cleanup completed');
+  } catch (error) {
+    console.error('❌ Failed startup session cleanup:', error);
   }
 }
 
@@ -150,6 +249,12 @@ async function handleContentLoaded(payload: any, sender: chrome.runtime.MessageS
 // Handle feature toggle
 async function handleToggleFeature(payload: { enabled: boolean }) {
   console.log('Feature toggled:', payload.enabled);
+  
+  // If disabling, cleanup session data across all tabs
+  if (!payload.enabled) {
+    console.log('🧹 Extension disabled - cleaning up session data');
+    await cleanupStaleSessionData();
+  }
   
   // Update badge based on feature state
   const badgeText = payload.enabled ? '' : 'OFF';

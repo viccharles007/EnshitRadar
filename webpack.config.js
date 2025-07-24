@@ -35,7 +35,8 @@ module.exports = (env, argv) => {
       new CopyPlugin({
         patterns: [
           { from: 'src/manifest.json', to: 'manifest.json' },
-          { from: 'src/assets', to: 'assets', noErrorOnMissing: true }
+          { from: 'src/assets', to: 'assets', noErrorOnMissing: true },
+          { from: 'src/data', to: 'data', noErrorOnMissing: true }
         ]
       }),
       new HtmlPlugin({

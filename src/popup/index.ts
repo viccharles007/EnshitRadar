@@ -1,6 +1,7 @@
 import { useSettingsStore } from '@/stores/settingsStore';
 import { sendToBackground, getCurrentTab } from '@/utils/messaging';
 import { MessageType } from '@/types';
+import { channelDatabase } from '@/utils/channelDatabase';
 
 console.log('🔧 Popup script loaded');
 
@@ -62,12 +63,8 @@ function updateUI() {
     toggleText.textContent = 'Enable Extension';
   }
   
-  // Update settings controls
-  const themeSelect = document.getElementById('theme-select') as HTMLSelectElement;
-  const notificationsCheckbox = document.getElementById('notifications-checkbox') as HTMLInputElement;
-  
-  themeSelect.value = settings.theme;
-  notificationsCheckbox.checked = settings.notifications;
+  // Update database stats
+  updateDatabaseStats();
 }
 
 function setupEventListeners() {
@@ -75,20 +72,18 @@ function setupEventListeners() {
   const toggleButton = document.getElementById('toggle-button') as HTMLButtonElement;
   toggleButton.addEventListener('click', handleToggle);
   
-  // Theme select
-  const themeSelect = document.getElementById('theme-select') as HTMLSelectElement;
-  themeSelect.addEventListener('change', handleThemeChange);
-  
-  // Notifications checkbox
-  const notificationsCheckbox = document.getElementById('notifications-checkbox') as HTMLInputElement;
-  notificationsCheckbox.addEventListener('change', handleNotificationsChange);
-  
   // Footer links
   const optionsLink = document.getElementById('options-link') as HTMLAnchorElement;
   optionsLink.addEventListener('click', handleOptionsClick);
   
   const helpLink = document.getElementById('help-link') as HTMLAnchorElement;
   helpLink.addEventListener('click', handleHelpClick);
+  
+  const discordLink = document.getElementById('discord-link') as HTMLAnchorElement;
+  discordLink.addEventListener('click', handleDiscordClick);
+  
+  const youtubeLink = document.getElementById('youtube-link') as HTMLAnchorElement;
+  youtubeLink.addEventListener('click', handleYouTubeClick);
   
   // Subscribe to store changes
   useSettingsStore.subscribe(updateUI);
@@ -98,6 +93,12 @@ async function handleToggle() {
   try {
     const currentSettings = useSettingsStore.getState().settings;
     const newEnabled = !currentSettings.enabled;
+    
+    // If disabling, cleanup session data first
+    if (!newEnabled) {
+      console.log('🧹 Extension being disabled - cleaning up session data');
+      await cleanupSessionDataAllTabs();
+    }
     
     // Update settings
     await useSettingsStore.getState().updateSettings({ enabled: newEnabled });
@@ -121,33 +122,31 @@ async function handleToggle() {
   }
 }
 
-async function handleThemeChange(event: Event) {
+async function cleanupSessionDataAllTabs() {
   try {
-    const select = event.target as HTMLSelectElement;
-    const theme = select.value as 'light' | 'dark' | 'auto';
+    const tabs = await chrome.tabs.query({});
+    const cleanupPromises = tabs.map(async (tab) => {
+      if (tab.id) {
+        try {
+          await chrome.tabs.sendMessage(tab.id, {
+            type: MessageType.CLEANUP_SESSION_DATA,
+            payload: { reason: 'extension_toggle_off' }
+          });
+        } catch (error) {
+          // Tab might not have content script loaded
+          console.debug('Could not send cleanup message to tab:', tab.id);
+        }
+      }
+    });
     
-    await useSettingsStore.getState().updateSettings({ theme });
-    
-    console.log('Theme changed:', theme);
+    await Promise.allSettled(cleanupPromises);
+    console.log('✅ Session cleanup sent to all tabs');
   } catch (error) {
-    console.error('Failed to change theme:', error);
-    showError('Failed to change theme');
+    console.error('❌ Failed to cleanup session data:', error);
   }
 }
 
-async function handleNotificationsChange(event: Event) {
-  try {
-    const checkbox = event.target as HTMLInputElement;
-    const notifications = checkbox.checked;
-    
-    await useSettingsStore.getState().updateSettings({ notifications });
-    
-    console.log('Notifications changed:', notifications);
-  } catch (error) {
-    console.error('Failed to change notifications:', error);
-    showError('Failed to change notifications setting');
-  }
-}
+
 
 function handleOptionsClick(event: Event) {
   event.preventDefault();
@@ -158,8 +157,51 @@ function handleOptionsClick(event: Event) {
 function handleHelpClick(event: Event) {
   event.preventDefault();
   // Open help page or documentation
-  chrome.tabs.create({ url: 'https://github.com/yourusername/enshit-radar#readme' });
+  chrome.tabs.create({ url: 'https://github.com/justmadlime/EnshitRadar#readme' });
   window.close();
+}
+
+function handleDiscordClick(event: Event) {
+  event.preventDefault();
+  // Open Discord server
+  chrome.tabs.create({ url: 'https://discord.gg/brCNpJcx' });
+  window.close();
+}
+
+function handleYouTubeClick(event: Event) {
+  event.preventDefault();
+  // Open YouTube channel
+  chrome.tabs.create({ url: 'https://www.youtube.com/@justmadlime' });
+  window.close();
+}
+
+function updateDatabaseStats() {
+  try {
+    const stats = channelDatabase.getStatistics();
+    const totalChannels = channelDatabase.getTotalChannels();
+    
+    // Update total channels
+    const totalElement = document.getElementById('total-channels') as HTMLElement;
+    totalElement.textContent = totalChannels.toString();
+    
+    // Update individual counts
+    const lowElement = document.getElementById('low-count') as HTMLElement;
+    const middleElement = document.getElementById('middle-count') as HTMLElement;
+    const highElement = document.getElementById('high-count') as HTMLElement;
+    const confirmedElement = document.getElementById('confirmed-count') as HTMLElement;
+    
+    lowElement.textContent = stats.low.toString();
+    middleElement.textContent = stats.middle.toString();
+    highElement.textContent = stats.high.toString();
+    confirmedElement.textContent = stats.confirmed.toString();
+    
+    // Show stats section
+    const statsSection = document.getElementById('database-stats') as HTMLElement;
+    statsSection.style.display = 'block';
+    
+  } catch (error) {
+    console.error('Failed to update database stats:', error);
+  }
 }
 
 function showError(message: string) {

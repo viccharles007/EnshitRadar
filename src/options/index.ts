@@ -1,5 +1,5 @@
 import { useSettingsStore } from '@/stores/settingsStore';
-import { ExtensionSettings } from '@/types';
+import { ExtensionSettings, MessageType } from '@/types';
 
 console.log('⚙️ Options page loaded');
 
@@ -37,12 +37,8 @@ function updateUI() {
   
   // Update form controls
   const enabledToggle = document.getElementById('enabled-toggle') as HTMLInputElement;
-  const themeSelect = document.getElementById('theme-select') as HTMLSelectElement;
-  const notificationsToggle = document.getElementById('notifications-toggle') as HTMLInputElement;
   
   enabledToggle.checked = settings.enabled;
-  themeSelect.value = settings.theme;
-  notificationsToggle.checked = settings.notifications;
   
   // Update debug toggle (stored separately)
   loadDebugSetting();
@@ -51,13 +47,9 @@ function updateUI() {
 function setupEventListeners() {
   // Setting controls
   const enabledToggle = document.getElementById('enabled-toggle') as HTMLInputElement;
-  const themeSelect = document.getElementById('theme-select') as HTMLSelectElement;
-  const notificationsToggle = document.getElementById('notifications-toggle') as HTMLInputElement;
   const debugToggle = document.getElementById('debug-toggle') as HTMLInputElement;
   
   enabledToggle.addEventListener('change', handleEnabledChange);
-  themeSelect.addEventListener('change', handleThemeChange);
-  notificationsToggle.addEventListener('change', handleNotificationsChange);
   debugToggle.addEventListener('change', handleDebugChange);
   
   // Action buttons
@@ -86,28 +78,7 @@ async function handleEnabledChange(event: Event) {
   }
 }
 
-async function handleThemeChange(event: Event) {
-  try {
-    const select = event.target as HTMLSelectElement;
-    const theme = select.value as 'light' | 'dark' | 'auto';
-    await useSettingsStore.getState().updateSettings({ theme });
-    showMessage('Theme updated', 'success');
-  } catch (error) {
-    console.error('Failed to update theme:', error);
-    showMessage('Failed to update theme', 'error');
-  }
-}
 
-async function handleNotificationsChange(event: Event) {
-  try {
-    const checkbox = event.target as HTMLInputElement;
-    await useSettingsStore.getState().updateSettings({ notifications: checkbox.checked });
-    showMessage('Notifications setting updated', 'success');
-  } catch (error) {
-    console.error('Failed to update notifications:', error);
-    showMessage('Failed to update setting', 'error');
-  }
-}
 
 async function handleDebugChange(event: Event) {
   try {
@@ -187,6 +158,36 @@ async function handleClearData() {
       console.error('Failed to clear data:', error);
       showMessage('Failed to clear data', 'error');
     }
+  }
+}
+
+async function handleCleanupSession() {
+  try {
+    // Send cleanup message to all active tabs
+    const tabs = await chrome.tabs.query({});
+    let cleanedTabs = 0;
+    
+    const cleanupPromises = tabs.map(async (tab) => {
+      if (tab.id) {
+        try {
+          await chrome.tabs.sendMessage(tab.id, {
+            type: MessageType.CLEANUP_SESSION_DATA,
+            payload: { reason: 'manual_cleanup' }
+          });
+          cleanedTabs++;
+        } catch (error) {
+          // Tab might not have content script loaded - this is fine
+          console.debug('Could not send cleanup message to tab:', tab.id);
+        }
+      }
+    });
+    
+    await Promise.allSettled(cleanupPromises);
+    
+    showMessage(`Session data cleaned on ${cleanedTabs} tabs`, 'success');
+  } catch (error) {
+    console.error('Failed to cleanup session data:', error);
+    showMessage('Failed to cleanup session data', 'error');
   }
 }
 
