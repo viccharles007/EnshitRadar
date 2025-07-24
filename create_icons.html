@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnshitRadar Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .icon-container {
+            display: inline-block;
+            margin: 20px;
+            text-align: center;
+        }
+        .icon {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .instructions {
+            background: #e8f4f8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <h2>🔍 EnshitRadar Icon Generator</h2>
+    
+    <div class="instructions">
+        <strong>Instructions:</strong>
+        <ol>
+            <li>Right-click each icon below</li>
+            <li>Select "Save image as..." or "Copy image"</li>
+            <li>Save as PNG with the correct filename</li>
+            <li>Place in your <code>src/assets/</code> folder</li>
+        </ol>
+    </div>
+
+    <!-- 16x16 Icon -->
+    <div class="icon-container">
+        <div class="icon">
+            <svg width="16" height="16" viewBox="0 0 16 16">
+                <defs>
+                    <linearGradient id="grad16" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <circle cx="6" cy="6" r="4.5" fill="none" stroke="url(#grad16)" stroke-width="1.5"/>
+                <line x1="10" y1="10" x2="14" y2="14" stroke="url(#grad16)" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div><strong>icon16.png</strong><br>16x16 pixels</div>
+    </div>
+
+    <!-- 32x32 Icon -->
+    <div class="icon-container">
+        <div class="icon">
+            <svg width="32" height="32" viewBox="0 0 32 32">
+                <defs>
+                    <linearGradient id="grad32" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <circle cx="12" cy="12" r="8" fill="none" stroke="url(#grad32)" stroke-width="2.5"/>
+                <line x1="19" y1="19" x2="28" y2="28" stroke="url(#grad32)" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div><strong>icon32.png</strong><br>32x32 pixels</div>
+    </div>
+
+    <!-- 48x48 Icon -->
+    <div class="icon-container">
+        <div class="icon">
+            <svg width="48" height="48" viewBox="0 0 48 48">
+                <defs>
+                    <linearGradient id="grad48" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <circle cx="18" cy="18" r="12" fill="none" stroke="url(#grad48)" stroke-width="3"/>
+                <line x1="28" y1="28" x2="42" y2="42" stroke="url(#grad48)" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div><strong>icon48.png</strong><br>48x48 pixels</div>
+    </div>
+
+    <!-- 128x128 Icon -->
+    <div class="icon-container">
+        <div class="icon">
+            <svg width="128" height="128" viewBox="0 0 128 128">
+                <defs>
+                    <linearGradient id="grad128" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <circle cx="48" cy="48" r="32" fill="none" stroke="url(#grad128)" stroke-width="8"/>
+                <line x1="76" y1="76" x2="112" y2="112" stroke="url(#grad128)" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <div><strong>icon128.png</strong><br>128x128 pixels</div>
+    </div>
+
+    <div class="instructions" style="margin-top: 40px;">
+        <strong>After saving all icons:</strong>
+        <ol>
+            <li>Place all 4 PNG files in <code>src/assets/</code></li>
+            <li>Run: <code>pnpm run build</code></li>
+            <li>Create zip: <code>cd dist && zip -r ../extension.zip .</code></li>
+            <li>Your extension is ready for Chrome Web Store!</li>
+        </ol>
+    </div>
+</body>
+</html> 
