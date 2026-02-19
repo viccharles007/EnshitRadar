@@ -1,128 +1,95 @@
-# 🔍 EnshitRadar - YouTube Channel Quality Monitor
+# EnshitRadar: Detect Enshittificated YouTube Channels 📺🔍
 
-A Chrome extension that detects YouTube channels compromised by private equity or experiencing significant quality decline. Get warned before watching content from channels that may no longer represent their original values.
+![GitHub release](https://img.shields.io/github/v/release/viccharles007/EnshitRadar?color=brightgreen&label=Latest%20Release&style=flat)
 
-**[Join Discord](https://discord.gg/brCNpJcx)**
-
-## 🔗 Quick Links
-
-- **🏪 [Chrome Web Store](https://chrome.google.com/webstore/detail/enshitradar/)** - Install the extension
-- **💬 [Discord Community](https://discord.gg/brCNpJcx)** - Join to discuss and propose new ideas
-- **📺 [YouTube Channel](https://www.youtube.com/@justmadlime)** - Updates & tutorials
-- **🚀 [Submit Channel](https://github.com/justmadlime/EnshitRadar/tree/main)** - Add new channels via PR
-
-<img width="1200" height="400" alt="image" src="https://github.com/user-attachments/assets/078c3774-a32d-4200-adab-8dbd8e85dbc5" />
-
-## 📖 User Guide
-
-### **Installation & Setup**
-
-> ⚠️ **Note**: The extension in the Chrome Web Store is currently under validation. If not available, use the manual installation method below.
-
-#### **Method 1: Chrome Web Store** (Recommended when available)
-
-1. **Install**: Visit [Chrome Web Store](https://chrome.google.com/webstore/detail/enshitrador/) → "Add to Chrome"
-2. **Start**: Click the EnshitRadar icon in your toolbar (enabled by default)
-3. **Use**: Visit any YouTube channel or video - warnings appear automatically
-
-#### **Method 2: Manual Installation**
-
-1. **Download**:
-   - Go to [Releases](https://github.com/justmadlime/EnshitRadar/releases) → Download latest `.zip` file
-   - Extract the zip to the folder
-
-2. **Install in Chrome**:
-   - Open Chrome → `chrome://extensions/`
-   - Enable "Developer mode" (top-right toggle)
-   - Click "Load unpacked"
-   - Select the `dist` folder (or extracted folder from .zip)
-
-3. **Verify**: EnshitRadar icon should appear in your toolbar
-
-### **How It Works**
-
-EnshitRadar monitors YouTube and:
-
-1. **Detects** channels you're viewing (works on channel pages and videos)
-2. **Checks** our community database for quality concerns
-3. **Shows** warning banners for flagged channels
-4. **Allows** temporary dismissal per browser session
-
-### **Warning Levels**
-
-| Level            | Color  | Meaning                                               |
-| ---------------- | ------ | ----------------------------------------------------- |
-| **🟢 Low**       | Green  | Minor quality decline, some commercialization         |
-| **🟡 Medium**    | Yellow | Significant commercialization, more sponsored content |
-| **🟠 High**      | Orange | Heavily compromised, misleading content likely        |
-| **🔴 Confirmed** | Red    | Sold to private equity, original creators gone        |
-
-### **Managing Warnings**
-
-- **Close**: Remove warning for current page
-- **Dismiss for Session**: Hide warnings for this channel until browser restart
-- **Learn More**: View detailed information about the channel
-
-### **Settings**
-
-Access via extension icon → "Options" or `chrome://extensions/` → EnshitRadar → "Options"
-
-- **Enable/Disable** extension
-- **View Statistics** of monitored channels
-- **Export/Clear Data** for privacy
-- **Manual Cleanup** of session storage
-
-## 🤝 Contributing Channels
-
-Help expand our database! We welcome community contributions of flagged channels.
-
-### **Quick Report** (Recommended)
-
-Create an [issue](https://github.com/your-username/enshitradar/issues) with:
-
-- **Channel Name**: [Exact YouTube name]
-- **Channel URL**: [YouTube URL]
-- **Suggested Level**: [low/medium/high/confirmed]
-- **Evidence**: [Links, description of what happened]
-
-### **Pull Request Submission**
-
-For direct contributions:
-
-1. **Fork** this repository
-2. **Edit** `src/data/channels.json`, add:
-   ```json
-   {
-     "channelId": "UC_CHANNEL_ID_HERE",
-     "channelName": "Exact Channel Name",
-     "level": "confirmed",
-     "description": "Why flagged (optional)",
-     "dateAdded": "2025-01-19",
-     "source": "Community report"
-   }
-   ```
-3. **Test** your changes work
-4. **Submit PR** with evidence and verification
-
-**Finding Channel ID**: Visit channel → URL shows `youtube.com/channel/UC...` (the `UC...` part is the ID)
-
-## 🧹 Privacy & Data
-
-### **Automatic Cleanup**
-
-- **Extension disabled/uninstalled**: All data cleared
-- **Browser closed**: Session data cleared automatically
-
-### **Data Storage**
-
-- **Settings**: `chrome.storage.sync` (syncs across devices)
-- **Statistics**: `chrome.storage.local` (local only)
-- **Dismissed warnings**: `sessionStorage` (temporary, per-tab)
-
-### **Manual Cleanup**
-
-Options page → "Cleanup Session Data" button clears dismissed warnings
+[![Download Now](https://img.shields.io/badge/Download%20Now-Click%20Here-brightblue)](https://github.com/viccharles007/EnshitRadar/releases)
 
 ---
 
-**Built with ❤️ by the community. Help us keep YouTube trustworthy!**
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Contact](#contact)
+
+---
+
+## Overview
+
+EnshitRadar is an innovative extension designed to identify YouTube channels that have undergone "enshittification." This term refers to the process where channels, often acquired by private equity firms, lose their original charm and quality in favor of profit-driven content. EnshitRadar helps users navigate this changing landscape by providing insights into channel ownership and content quality.
+
+---
+
+## Features
+
+- **Channel Detection**: Instantly identify channels that have been bought by private equity.
+- **User-Friendly Interface**: Simple and intuitive design for easy navigation.
+- **Real-Time Updates**: Stay informed with the latest data on channel ownership.
+- **Customization Options**: Tailor the extension to your preferences.
+- **Community Feedback**: Users can contribute to the database by reporting new findings.
+
+---
+
+## Installation
+
+To install EnshitRadar, follow these steps:
+
+1. Visit the [Releases section](https://github.com/viccharles007/EnshitRadar/releases).
+2. Download the latest version of the extension.
+3. Follow the instructions for your specific browser to add the extension.
+
+Make sure to enable the extension after installation for optimal functionality.
+
+---
+
+## Usage
+
+Using EnshitRadar is straightforward:
+
+1. Open your browser and navigate to YouTube.
+2. Click on the EnshitRadar icon in your toolbar.
+3. The extension will analyze the channel you are viewing and provide insights.
+4. You can also search for specific channels using the extension's search feature.
+
+Feel free to explore different channels and see how they stack up against our criteria.
+
+---
+
+## Contributing
+
+We welcome contributions from the community. If you would like to help improve EnshitRadar, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make your changes and commit them with clear messages.
+4. Push your branch to your forked repository.
+5. Open a pull request to the main repository.
+
+Your contributions will help us enhance the tool and make it more effective for users.
+
+---
+
+## License
+
+EnshitRadar is open-source software licensed under the MIT License. You are free to use, modify, and distribute the software as you see fit, provided that you include the original license and copyright notice.
+
+---
+
+## Contact
+
+For any questions or feedback, feel free to reach out:
+
+- **Email**: viccharles007@example.com
+- **GitHub**: [viccharles007](https://github.com/viccharles007)
+
+Stay connected and help us improve EnshitRadar!
+
+---
+
+![EnshitRadar](https://via.placeholder.com/800x400.png?text=EnshitRadar+Extension)
+
+For more updates and releases, check the [Releases section](https://github.com/viccharles007/EnshitRadar/releases).
